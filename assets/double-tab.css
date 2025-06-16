@@ -1,0 +1,72 @@
+.double-tab__container {
+  margin: 0 auto;
+}
+
+.double-tab__tab-image {
+  width: 84px;
+  height: auto;
+}
+.double-tab__tab:not(.active) .double-tab__tab-image.active {
+  display: none;
+}
+
+.double-tab__tab.active .double-tab__tab-image.default {
+  display: none;
+}
+
+.double-tab__tab {
+  min-width: 216px;
+  padding: 20px 0 12px;
+}
+
+.double-tab__tab::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 3px;
+  background-color: #0055b8;
+  opacity: 0;
+  transition:
+    width 0.2s ease-in-out,
+    opacity 0.3s ease-in-out;
+  display: block;
+}
+
+.double-tab__tab.active::after {
+  width: 100%;
+  opacity: 1;
+  transition:
+    width 0.2s ease-in-out,
+    opacity 0.3s ease-in-out;
+}
+
+.double-tab__tab.active span {
+  color: #0055b8;
+}
+
+.double-tab__card {
+  display: none;
+}
+
+.double-tab__card-description {
+  font-size: 14px;
+  color: #101011;
+}
+
+.double-tab__card-description li {
+  margin-bottom: 1rem;
+  font-size: 14px;
+  display: flex;
+}
+
+.double-tab__card-variant-select {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("https://cdn.shopify.com/s/files/1/0945/4246/3258/files/icon-chevron-down.png?v=1750103844");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px;
+}

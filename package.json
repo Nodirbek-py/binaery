@@ -1,0 +1,26 @@
+{
+  "name": "binaery",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "html-styles": "^1.0.0",
+    "isarray": "^1.0.0",
+    "isobject": "^2.1.0",
+    "line-column": "^1.0.2",
+    "ohm-js": "^16.6.0"
+  },
+  "devDependencies": {
+    "@shopify/prettier-plugin-liquid": "^1.9.3",
+    "@tailwindcss/cli": "^4.1.10",
+    "concurrently": "^9.1.2",
+    "tailwindcss": "^4.1.10"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "concurrently \"shopify theme dev -s binaery-test-task\" \"npx @tailwindcss/cli -i ./assets/tailwind.input.css -o ./assets/tailwind.output.css --watch\" "
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

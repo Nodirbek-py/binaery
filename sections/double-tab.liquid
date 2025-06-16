@@ -1,0 +1,418 @@
+{{- 'double-tab.css' | asset_url | stylesheet_tag -}}
+
+<style>
+    #{{ section.id }}-double-tab {
+      background: {{- section.settings.bg_color -}};
+      padding: {{ section.settings.vertical_padding }}px {{ section.settings.horizontal_padding }}px;
+    }
+    #{{ section.id }}-double-tab .double-tab__container {
+      max-width: {{- section.settings.max_width -}}px;
+      margin: 0 auto;
+    }
+    #{{ section.id }}-double-tab .double-tab__card-container {
+      gap: {{- section.settings.card_spacing -}}px;
+    }
+    .double-tab__card-description li::before {
+      content: "";
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      margin-right: 8px;
+      background-repeat: no-repeat;
+      background-size: contain;
+      background-position: center;
+      background-color: transparent;
+      background-origin: content-box;
+      background-clip: content-box;
+      background: url("{{- 'tick.svg' |  asset_url -}}");
+    }
+    @media screen and (max-width: 1024px) {
+      #{{ section.id }}-double-tab .double-tab__card-container {
+        gap: calc({{ section.settings.card_spacing }}px / 2);
+      }
+    }
+    @media screen and (max-width: 767px) {
+      #{{ section.id }}-double-tab .double-tab__card-container {
+        gap: calc({{ section.settings.card_spacing }}px / 3);
+      }
+    }
+</style>
+
+<section id="{{- section.id -}}-double-tab" class="double-tab min-h-[1100px]">
+  {{ left_card_count }} {{ right_card_count }}
+  <div class="double-tab__container">
+    {% comment %} Header {% endcomment %}
+    <div class="double-tab__header flex flex-col items-center text-center gap-2">
+      <h2 class="double-tab__title font-medium text-xl text-[#101011] text-center">
+        {{- section.settings.section_title | escape -}}
+      </h2>
+      <div class="double-tab__subtitle text-center mb-13">{{- section.settings.section_subtitle -}}</div>
+    </div>
+
+    {% comment %} Tabs {% endcomment %}
+    <div class="double-tab__tabs flex justify-center mt-6 border-b border-solid border-{{ section.settings.border_color }} mb-15">
+      <button
+        class="double-tab__tab grid cursor-pointer relative justify-center content-between double-tab__tab--left {% if section.settings.active_tab == 'left' %}active{%- endif -%}"
+        data-tab="left"
+      >
+        {{-
+          section.settings.left_default_img
+          | image_url: width: 84
+          | image_tag: class: 'double-tab__tab-image default'
+        -}}
+        {{-
+          section.settings.left_active_img
+          | image_url: width: 84
+          | image_tag: class: 'double-tab__tab-image active'
+        -}}
+        <span class="double-tab__tab-title text-xl font-semibold text-center mt-2 inline-block">
+          {{- section.settings.left_tab_title | escape -}}
+        </span>
+      </button>
+      <button
+        class="double-tab__tab grid cursor-pointer relative justify-center content-between double-tab__tab--right {% if section.settings.active_tab == 'right' %}active{%- endif -%}"
+        data-tab="right"
+      >
+        {{-
+          section.settings.right_default_img
+          | image_url: width: 84
+          | image_tag: class: 'double-tab__tab-image default'
+        -}}
+        {{-
+          section.settings.right_active_img
+          | image_url: width: 84
+          | image_tag: class: 'double-tab__tab-image active'
+        -}}
+        <span class="double-tab__tab-title text-xl font-semibold text-center mt-2 inline-block">
+          {{- section.settings.right_tab_title | escape -}}
+        </span>
+      </button>
+    </div>
+
+    {% comment %} Product Cards {% endcomment %}
+    <div class="double-tab__cards flex justify-center">
+      <div class="double-tab__card-container flex mt-8 overflow-x-auto w-fit scrollbar-hide snap-mandatory py-8 px-4">
+        {%- for block in section.blocks -%}
+          <div
+            onclick="window.location.href='{{- block.settings.product.url -}}'"
+            class="w-[365px] shrink-0 snap-start relative cursor-pointer double-tab__card rounded-3xl hover:drop-shadow-xl transition-all duration-300 drop-shadow-lg inset-2 bg-white double-tab__card--{{- block.settings.tab_id -}}"
+            data-tab="{{- block.settings.tab_id -}}"
+            style="padding: {{ section.settings.card_vr_padding }}px {{ section.settings.card_hz_padding }}px;"
+          >
+            {%- if block.settings.product -%}
+              {%- if block.settings.product_badge_text != blank or block.settings.product_badge != blank -%}
+                <div class="absolute top-0 left-0 z-5">
+                  {%- if block.settings.product_badge == blank -%}
+                    <span
+                      class="rounded-br-full rounded-tl-full text-sm py-1 px-5 !text-white font-semibold"
+                      style="background: {% if block.settings.product_badge_color != blank %} {{ block.settings.product_badge_color }} {% else %}#000; {% endif %}"
+                    >
+                      {{- block.settings.product_badge_text | escape -}}
+                    </span>
+                  {%- else -%}
+                    <img
+                      src="{{- block.settings.product_badge |  image_url: width: 150 -}}"
+                      width="130"
+                      height="24"
+                      class="w-[130]"
+                    >
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+              {%- assign card_product = block.settings.product -%}
+              <div class="double-tab__card-content pt-4">
+                <div class="double-tab__card-link">
+                  <h3 class="double-tab__card-title mb-4 text-lg lg:text-xl font-semibold !text-[#101011]">
+                    {%- if block.settings.product_title != blank -%}
+                      {{- block.settings.product_title | escape -}}
+                    {%- else -%}
+                      {{- card_product.title | escape -}}
+                    {%- endif -%}
+                  </h3>
+                  <div class="mb-4">
+                    {%- if block.settings.product_image != blank -%}
+                      {{-
+                        block.settings.product_image
+                        | image_url: width: 300
+                        | image_tag: class: 'double-tab__card-image'
+                      -}}
+                    {%- else -%}
+                      {{-
+                        card_product.featured_image
+                        | image_url: width: 300
+                        | image_tag: class: 'double-tab__card-image'
+                      -}}
+                    {%- endif -%}
+                  </div>
+                  {%- if card_product.variants_count > 1 -%}
+                    <select
+                      onclick="event.stopPropagation();"
+                      onmousedown="event.stopPropagation();"
+                      class="double-tab__card-variant-select mb-4 w-full rounded-lg border border-solid border-[#e0e0e0] bg-white px-4 py-2 text-base font-normal text-[#101011] focus:border-blue-600 focus:outline-none"
+                    >
+                      {%- for variant in card_product.variants -%}
+                        <option data-price="{{- variant.price -}}" value="{{- variant.title -}}">
+                          {{- variant.title | escape -}}
+                        </option>
+                      {%- endfor -%}
+                    </select>
+                  {%- endif -%} 
+                  <p class="double-tab__card-price lg:text-xl font-medium text-[#101011] mb-4">
+                    {%- if card_product.variants_count > 1 -%}
+                      {%- liquid
+                        assign selected_variant = card_product.selected_or_first_available_variant
+                        assign variant_price = selected_variant.price | divided_by: 100
+                        assign variant_count = selected_variant.title | split: ' Standard kits' | first
+                        assign total_price = variant_price | times: variant_count
+                      -%}
+                      {{-  total_price -}}
+                    {%- else -%}
+                      {{- card_product.price | money_without_currency -}}
+                    {%- endif -%}
+                    <span> {{ shop.currency }}</span>
+                    {%- if card_product.variants_count > 1 -%}
+                      <span class="text-neutral-400 inline-block ml-5 double-tab__card-per--price">({{ card_product.selected_or_first_available_variant.price | money_with_currency }} / Test)</span>
+                    {%- endif -%}
+                  </p>
+                  <a
+                    href="{{- card_product.url -}}"
+                    class="rounded-full min-w-44 text-center !font-semibold inline-block py-2.5 px-8 bg-blue-600 hover:bg-blue-500 transition-all duration-300 no-underline !text-white mb-4"
+                  >
+                    {{- 'actions.add_to_cart' | t -}}
+                  </a>
+                  <div class="double-tab__card-description mb-4">
+                    {%- if block.settings.product_description != blank -%}
+                      {{- block.settings.product_description -}}
+                    {%- else -%}
+                      {{- card_product.description | truncate: 100, '...' -}}
+                    {%- endif -%}
+                  </div>
+                </div>
+              </div>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{{- 'double-tab.js' | asset_url | script_tag -}}
+
+{% schema %}
+{
+  "name": "Double Tab",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Design"
+    },
+    {
+      "type": "color_background",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#f0f0f0"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "rgba(140, 140, 140, 0.50)"
+    },
+    {
+      "type": "image_picker",
+      "id": "left_default_img",
+      "label": "Left Tab Default Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "right_default_img",
+      "label": "Right Tab Default Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "left_active_img",
+      "label": "Left Tab Active Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "right_active_img",
+      "label": "Right Tab Active Image"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max Width",
+      "default": 1360,
+      "min": 1080,
+      "max": 1440,
+      "step": 40
+    },
+    {
+      "type": "range",
+      "id": "vertical_padding",
+      "label": "Vertical Padding",
+      "default": 30,
+      "min": 0,
+      "max": 100,
+      "step": 2
+    },
+    {
+      "type": "range",
+      "id": "horizontal_padding",
+      "label": "Horizontal Padding",
+      "default": 30,
+      "min": 0,
+      "max": 100,
+      "step": 2
+    },
+    {
+      "type": "range",
+      "id": "card_spacing",
+      "label": "Gap between cards",
+      "default": 64,
+      "min": 0,
+      "max": 100,
+      "step": 2
+    },
+    {
+      "type": "range",
+      "id": "card_vr_padding",
+      "label": "Card Vertical Padding",
+      "default": 30,
+      "min": 0,
+      "max": 100,
+      "step": 2
+    },
+    {
+      "type": "range",
+      "id": "card_hz_padding",
+      "label": "Card Horizontal Padding",
+      "default": 30,
+      "min": 0,
+      "max": 100,
+      "step": 2
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Section Title",
+      "default": "Double Tab Section"
+    },
+    {
+      "type": "richtext",
+      "id": "section_subtitle",
+      "label": "Section Subtitle",
+      "default": "<p>Use this section to display two tabs with different content. You can customize the images and text for each tab.</p>"
+    },
+    {
+      "type": "text",
+      "id": "left_tab_title",
+      "label": "Left Tab Title",
+      "default": "Left Tab"
+    },
+    {
+      "type": "text",
+      "id": "right_tab_title",
+      "label": "Right Tab Title",
+      "default": "Right Tab"
+    },
+    {
+      "type": "select",
+      "id": "active_tab",
+      "label": "Which tab is active by default?",
+      "info": "Choose which tab should be active when the page loads.",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product_card",
+      "name": "Product Card",
+      "settings": [
+        {
+          "type": "select",
+          "id": "tab_id",
+          "label": "Which tab does this card belong to?",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left Tab"
+            },
+            {
+              "value": "right",
+              "label": "Right Tab"
+            }
+          ],
+          "default": "left",
+          "info": "Select the tab this product card will be displayed in."
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Select Product"
+        },
+        {
+          "type": "image_picker",
+          "id": "product_image",
+          "label": "Product Image Override",
+          "info": "If left blank, the product's featured image will be used."
+        },
+        {
+          "type": "text",
+          "id": "product_title",
+          "label": "Product Title Override",
+          "info": "If left blank, the product's title will be used."
+        },
+        {
+          "type": "richtext",
+          "id": "product_description",
+          "label": "Product Description Override",
+          "info": "If left blank, the product's description will be used."
+        },
+        {
+          "type": "image_picker",
+          "id": "product_badge",
+          "label": "Product Badge",
+          "info": "Optional badge image to display on the product card. If it set,  it will override the text badge."
+        },
+        {
+          "type": "text",
+          "id": "product_badge_text",
+          "label": "Product Badge Text",
+          "info": "Optional text badge to display on the product card. If left blank, no badge will be shown."
+        },
+        {
+          "type": "color_background",
+          "id": "product_badge_color",
+          "label": "Product Badge Background Color"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Double Tab",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}
