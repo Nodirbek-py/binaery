@@ -6,7 +6,7 @@
   data-tab="{{ block.settings.tab_id }}"
   style="padding: {{ section.settings.card_vr_padding }}px {{ section.settings.card_hz_padding }}px;">
   {%- if card_product -%}
-    {%- if block.settings.product_badge_text or block.settings.product_badge -%}
+    {%- if block.settings.product_badge_text != blank or block.settings.product_badge != blank -%}
       <div class="absolute top-0 left-0 z-5">
         {%- if block.settings.product_badge == blank -%}
           <span class="rounded-br-full rounded-tl-full text-sm py-1 px-5 !text-white font-semibold" style="background: {{ block.settings.product_badge_color | default: '#000' }}">

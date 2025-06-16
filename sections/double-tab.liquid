@@ -88,10 +88,10 @@
         </span>
       </button>
     </div>
-
+    
     {% comment %} Product Cards {% endcomment %}
     <div class="double-tab__cards flex justify-center">
-      <div class="double-tab__card-container flex mt-8 overflow-x-auto w-fit scrollbar-hide snap-mandatory py-8 px-4">
+      <div class="relative double-tab__card-container flex mt-8 overflow-x-auto w-fit scrollbar-hide snap-mandatory py-8 px-4">
         {%- for block in section.blocks -%}
           {%- render 'double-tab-card', block: block, section: section -%}
         {%- endfor -%}
